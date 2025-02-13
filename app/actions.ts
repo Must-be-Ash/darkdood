@@ -36,13 +36,15 @@ export async function processImage(formData: FormData) {
       .toBuffer()
 
     // Create SVG circles for the eyes with glow effect
-    const circleSize = Math.round(imageWidth * 0.15) // Bigger eyes
+    const circleSize = Math.round(imageWidth * 0.15)
     const circleSVG = `
       <svg width="${circleSize * 1.4}" height="${circleSize * 1.4}">
         <defs>
           <filter id="glow">
-            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+            <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
             <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="coloredBlur"/>
               <feMergeNode in="coloredBlur"/>
               <feMergeNode in="SourceGraphic"/>
             </feMerge>
@@ -59,24 +61,26 @@ export async function processImage(formData: FormData) {
     `
 
     // Simple straight line for mouth
-    const mouthWidth = Math.round(imageWidth * 0.08) // Wider mouth
+    const mouthWidth = Math.round(imageWidth * 0.08)
     const mouthSVG = `
       <svg width="${mouthWidth * 1.2}" height="16" shape-rendering="crispEdges">
         <defs>
           <filter id="glow">
-            <feGaussianBlur stdDeviation="1" result="coloredBlur"/>
+            <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
             <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="coloredBlur"/>
               <feMergeNode in="coloredBlur"/>
               <feMergeNode in="SourceGraphic"/>
             </feMerge>
           </filter>
         </defs>
-        <g transform="rotate(-10, ${mouthWidth/2}, 8)">
+        <g transform="rotate(-4, ${mouthWidth/2}, 8)">
           <rect 
             x="0"
-            y="4"
+            y="3"
             width="${mouthWidth}"
-            height="6"
+            height="10"
             fill="white"
             filter="url(#glow)"
             shape-rendering="crispEdges"
@@ -97,7 +101,7 @@ export async function processImage(formData: FormData) {
     
     // Position mouth directly between eyes, but shifted right
     const mouthX = Math.round(leftEyeX + ((rightEyeX - leftEyeX) / 2) + (mouthWidth * 0.8))
-    const mouthY = Math.round(eyesY + (circleSize * 0.85)) // Slightly lower
+    const mouthY = Math.round(eyesY + (circleSize * 0.80)) // Slightly higher
 
     // Composite the images with positioning
     const finalImage = await sharp(bwImage)
