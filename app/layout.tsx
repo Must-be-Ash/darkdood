@@ -1,13 +1,14 @@
 import "./globals.css"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
+import { Analytics } from "@vercel/analytics/react"
 import type React from "react" // Import React
 
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Image Processor",
-  description: "Convert images to black and white with glow effect",
+  title: "Dark Doods",
+  description: "Turn your doodle to dark mode",
 }
 
 export default function RootLayout({
@@ -17,7 +18,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        {children}
+        <Analytics />
+      </body>
     </html>
   )
 }
